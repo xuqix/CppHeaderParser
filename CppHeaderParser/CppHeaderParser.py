@@ -1710,6 +1710,16 @@ class _CppHeader( Resolver ):
             info['class'] = klass
             if klass in self.classes and not self.curClass:
                  #Class function defined outside the class
+
+                 # fix inline:
+                 # class function defined outside the class maybe inline
+                 # so we should check it
+                if 'inline' in stack:
+                    methods = self.classes[ info['class'] ]['methods']
+                    for access in ['public', 'protected', 'private']:
+                        for method in methods[access]:
+                            if name == method['name']:
+                                method['inline'] = True
                 return None
         #    info['name'] = name
         #else: info['name'] = name
